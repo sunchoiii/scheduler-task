@@ -1,5 +1,6 @@
 package com.sparta.schedulertask.repository;
 
+import com.sparta.schedulertask.dto.SchedulerResponseDto;
 import com.sparta.schedulertask.entity.Scheduler;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -44,6 +45,26 @@ public class SchedulerRepository {
         scheduler.setId(id);
 
         return scheduler;
+    }
+
+    public SchedulerResponseDto findById (Long id) {
+        Scheduler scheduler = new Scheduler();
+        // DB 조회
+        String sql = "SELECT * FROM scheduler where id = ?";
+
+        return jdbcTemplate.query(sql, result -> {
+            if (result.next()) {
+                scheduler.setId(result.getLong("id"));
+                scheduler.setUsername(result.getString("username"));
+                scheduler.setContents(result.getString("contents"));
+                scheduler.setPassword(result.getString("password"));
+                scheduler.setCreateDate(result.getDate("createDate"));
+                scheduler.setUpdateDate(result.getDate("updateDate"));
+                return new SchedulerResponseDto(scheduler);
+            } else{
+                return null;
+            }
+        }, id );
     }
 
 
