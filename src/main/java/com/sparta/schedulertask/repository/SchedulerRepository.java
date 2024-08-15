@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -28,8 +29,8 @@ public class SchedulerRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키를 반환받기 위한 객체
         // 작성일, 수정일 현재날짜와 시간 자동출력
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-        scheduler.setCreateDate(currentTimestamp);
-        scheduler.setUpdateDate(currentTimestamp);
+        scheduler.setCreateDate(currentTimestamp.toLocalDateTime());
+        scheduler.setUpdateDate(currentTimestamp.toLocalDateTime());
 
         String sql = "INSERT INTO scheduler (username, contents, password, createDate, updateDate) VALUES (?, ?, ?, ?, ?)";
         jdbcTemplate.update(con -> {
@@ -62,8 +63,8 @@ public class SchedulerRepository {
                 scheduler.setUsername(result.getString("username"));
                 scheduler.setContents(result.getString("contents"));
                 scheduler.setPassword(result.getString("password"));
-                scheduler.setCreateDate(result.getDate("createDate"));
-                scheduler.setUpdateDate(result.getDate("updateDate"));
+                scheduler.setCreateDate(result.getTimestamp("createDate").toLocalDateTime());
+                scheduler.setUpdateDate(result.getTimestamp("updateDate").toLocalDateTime());
                 return new SchedulerResponseDto(scheduler);
             } else {
                 return null;
@@ -89,7 +90,7 @@ public class SchedulerRepository {
             System.out.println("Invalid date format: " + e.getMessage());
         }
 
-        String sql = "SELECT * FROM scheduler WHERE (createDate BETWEEN ? AND ?) OR username = ? ORDER BY updateDate DESC";
+        String sql = "SELECT * FROM scheduler WHERE (updateDate BETWEEN ? AND ?) OR username = ? ORDER BY updateDate DESC";
 
         return jdbcTemplate.query(sql, new Object[]{formattedDate, nextDay, username}, new RowMapper<SchedulerResponseDto>() {
             @Override
@@ -97,9 +98,8 @@ public class SchedulerRepository {
                 Long id = rs.getLong("id");
                 String userName = rs.getString("username");
                 String contents = rs.getString("contents");
-                Date createDate = rs.getDate("createDate");
-                Date updateDate = rs.getDate("updateDate");
-
+                LocalDateTime createDate = rs.getTimestamp("createDate").toLocalDateTime();
+                LocalDateTime updateDate = rs.getTimestamp("updateDate").toLocalDateTime();
                 return new SchedulerResponseDto(id, userName, contents, createDate, updateDate);
             }
         });

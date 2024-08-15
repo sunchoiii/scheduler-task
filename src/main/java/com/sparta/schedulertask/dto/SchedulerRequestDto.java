@@ -3,7 +3,7 @@ package com.sparta.schedulertask.dto;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Setter
 @Getter
@@ -12,8 +12,8 @@ public class SchedulerRequestDto {
     private String username;
     private String contents;
     private String password;
-    private Date createDate;
-    private Date updateDate;
+    private LocalDateTime createDate;
+    private LocalDateTime updateDate;
 
 
 }
