@@ -1,13 +1,13 @@
 
 ### API 명세서
 
-| 기능       | Method | URL                |request|response|
-|----------|--------|--------------------|---|---|
-| 일정 등록    | POST   | /api/scheduler     |테스트3|테스트3|
+| 기능       | Method | URL                 |request|response|
+|----------|--------|---------------------|---|---|
+| 일정 등록    | POST   | /api/scheduler      |테스트3|테스트3|
 | 일정 조회    | GET    | /api/scheduler/{id} |테스트3|테스트3|
-| 일정 목록 조회 | GET    | /api/scheduler     |테스트3|테스트3|
-| 일정 수정    | PUT    | /api/scheduler/{id}     |테스트3|테스트3|
-| 일정 삭제    | DELETE | /api/scheduler/{id}     |테스트3|테스트3|
+| 일정 목록 조회 | GET    | /api/scheduler/{updateDate}/{username}     |테스트3|테스트3|
+| 일정 수정    | PUT    | /api/scheduler/{id} |테스트3|테스트3|
+| 일정 삭제    | DELETE | /api/scheduler/{id} |테스트3|테스트3|
 
 
 

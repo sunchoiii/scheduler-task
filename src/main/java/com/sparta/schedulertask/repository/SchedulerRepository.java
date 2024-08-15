@@ -1,5 +1,6 @@
 package com.sparta.schedulertask.repository;
 
+import com.sparta.schedulertask.dto.SchedulerRequestDto;
 import com.sparta.schedulertask.dto.SchedulerResponseDto;
 import com.sparta.schedulertask.entity.Scheduler;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -7,10 +8,10 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.sql.*;
 import java.util.List;
 
 public class SchedulerRepository {
@@ -46,7 +47,6 @@ public class SchedulerRepository {
         // DB Insert 후 받아온 기본키 확인
         Long id = keyHolder.getKey().longValue();
         scheduler.setId(id);
-
         return scheduler;
     }
 
@@ -72,10 +72,6 @@ public class SchedulerRepository {
     }
 
     // 일정 목록 조회
-    //1. 다음 조건을 바탕으로 등록된 일정 목록을 전부 조회할 수 있습니다.
-    //    1. updateDate (형식 : YYYY-MM-DD)  2. username
-    //2. 조건 중 한 가지만을 충족하거나, 둘 다 충족을 하지 않을 수도, 두 가지를 모두 충족할 수도 있습니다.
-    //3. `수정일` 기준 내림차순으로 정렬하여 조회합니다.
     public List<SchedulerResponseDto> findByDateOrName(String updateDate, String username) {
         Date formattedDate = null;
         Date nextDay = null;
@@ -108,5 +104,33 @@ public class SchedulerRepository {
             }
         });
     }
+
+    // 선택한 일정 수정
+    public void update(Long id, String password, SchedulerRequestDto schedulerRequestDto) {
+        String sql = "UPDATE scheduler SET username = ?, contents = ?, updateDate = ? WHERE id = ? AND password = ?";
+        jdbcTemplate.update(sql, schedulerRequestDto.getUsername(), schedulerRequestDto.getContents(),
+                //수정 날짜 수정시점으로 변경
+                java.sql.Timestamp.valueOf(java.time.LocalDateTime.now()), id, password);
+    }
+
+    // 선택한 일정 삭제
+    public void delete(Long id, String password) {
+        String sql = "DELETE FROM scheduler WHERE id = ? AND password = ?";
+        jdbcTemplate.update(sql, id, password);
+    }
+
+    // 비밀번호 확인
+    public boolean checkPassword(String password, Long id) {
+        String sql = "SELECT password FROM scheduler WHERE id = ?";
+        return Boolean.TRUE.equals(jdbcTemplate.query(sql, new Object[]{id}, result -> {
+            if (result.next()) {
+                String storedPassword = result.getString("password");
+                return password.equals(storedPassword);
+            } else {
+                return false;
+            }
+        }));
+    }
+
 
 }

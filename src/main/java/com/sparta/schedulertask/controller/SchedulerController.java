@@ -40,5 +40,18 @@ public class SchedulerController {
         return schedulerService.getSchedules(updateDate, username );
     }
 
+    // 선택한 일정 수정
+    @PutMapping("/scheduler/{id}/{password}")
+    public SchedulerResponseDto putSchedule(@PathVariable Long id,@PathVariable String password, @RequestBody SchedulerRequestDto schedulerRequestDto) {
+        SchedulerService schedulerService = new SchedulerService(jdbcTemplate);
+        return schedulerService.updateSchedule(id, password, schedulerRequestDto);
 
+    }
+
+    // 선택한 일정 삭제
+    @DeleteMapping("/scheduler/{id}/{password}")
+    public String deleteSchedule(@PathVariable Long id, @PathVariable String password) {
+        SchedulerService schedulerService = new SchedulerService(jdbcTemplate);
+        return schedulerService.deleteSchedule(id, password);
+    }
 }

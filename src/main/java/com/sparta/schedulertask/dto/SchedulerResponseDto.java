@@ -9,7 +9,6 @@ import java.util.Date;
 @Getter
 @Setter
 public class SchedulerResponseDto {
-
     private Long id;
     private String username;
     private String contents;
