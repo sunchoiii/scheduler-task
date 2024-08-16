@@ -4,15 +4,17 @@ import com.sparta.schedulertask.dto.SchedulerRequestDto;
 import com.sparta.schedulertask.dto.SchedulerResponseDto;
 import com.sparta.schedulertask.entity.Scheduler;
 import com.sparta.schedulertask.repository.SchedulerRepository;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 
+@Service
 public class SchedulerService {
 
     private final SchedulerRepository schedulerRepository;
 
-    public SchedulerService(JdbcTemplate jdbcTemplate) {
-        this.schedulerRepository = new SchedulerRepository(jdbcTemplate);
+    public SchedulerService(SchedulerRepository schedulerRepository) {
+        this.schedulerRepository= schedulerRepository;
     }
 
     // 일정 등록
