@@ -9,10 +9,10 @@ import java.util.List;
 
 public class SchedulerService {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final SchedulerRepository schedulerRepository;
 
     public SchedulerService(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.schedulerRepository = new SchedulerRepository(jdbcTemplate);
     }
 
     // 일정 등록
@@ -20,7 +20,6 @@ public class SchedulerService {
         // RequestDto -> Entity
         Scheduler scheduler = new Scheduler(schedulerRequestDto);
         // DB 저장
-        SchedulerRepository schedulerRepository = new SchedulerRepository(jdbcTemplate);
         Scheduler saveScheduler = schedulerRepository.save(scheduler);
         // Entity -> ResponseDto
         SchedulerResponseDto schedulerResponseDto = new SchedulerResponseDto(scheduler);
@@ -29,20 +28,17 @@ public class SchedulerService {
 
     // 선택한 일정 조회
     public SchedulerResponseDto getSchedule (Long id) {
-        SchedulerRepository schedulerRepository = new SchedulerRepository(jdbcTemplate);
         return schedulerRepository.findById(id);
 
     }
 
     // 일정 목록 조회
     public List<SchedulerResponseDto> getSchedules(String updateDate, String username) {
-        SchedulerRepository schedulerRepository = new SchedulerRepository(jdbcTemplate);
         return schedulerRepository.findByDateOrName(updateDate, username);
     }
 
     // 선택한 일정 수정
     public SchedulerResponseDto updateSchedule(Long id, String password, SchedulerRequestDto schedulerRequestDto) {
-        SchedulerRepository schedulerRepository = new SchedulerRepository(jdbcTemplate);
         //해당 일정이 있는지 조회
         SchedulerResponseDto scheduler = schedulerRepository.findById(id);
         if(scheduler != null ) {
@@ -62,7 +58,6 @@ public class SchedulerService {
 
     // 선택한 일정 삭제
     public String deleteSchedule(Long id, String password) {
-        SchedulerRepository schedulerRepository = new SchedulerRepository(jdbcTemplate);
         //해당 일정이 있는지 조회
         SchedulerResponseDto scheduler = schedulerRepository.findById(id);
         if(scheduler != null ) {

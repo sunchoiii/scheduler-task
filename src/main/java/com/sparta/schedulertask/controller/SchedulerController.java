@@ -12,16 +12,15 @@ import java.util.List;
 @RequestMapping("/api")
 public class SchedulerController {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final SchedulerService schedulerService;
 
     public SchedulerController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.schedulerService = new SchedulerService(jdbcTemplate);
     }
 
     // 일정 등록
     @PostMapping("/scheduler")
     public SchedulerResponseDto createScheduler(@RequestBody SchedulerRequestDto schedulerRequestDto) {
-        SchedulerService schedulerService = new SchedulerService(jdbcTemplate);
         return schedulerService.createScheduler(schedulerRequestDto);
     }
 
@@ -29,21 +28,18 @@ public class SchedulerController {
     // 일정의 고유 식별자(ID)를 사용하여 선택한 일정 단건의 정보를 조회
     @GetMapping("/scheduler/{id}")
     public SchedulerResponseDto getSchedule(@PathVariable Long id) {
-        SchedulerService schedulerService = new SchedulerService(jdbcTemplate);
         return schedulerService.getSchedule(id);
     }
 
     // 일정 목록 조회
     @GetMapping("/scheduler/{updateDate}/{username}")
     public List<SchedulerResponseDto> getSchedules(@PathVariable String updateDate, @PathVariable String username ) {
-        SchedulerService schedulerService = new SchedulerService(jdbcTemplate);
         return schedulerService.getSchedules(updateDate, username );
     }
 
     // 선택한 일정 수정
     @PutMapping("/scheduler/{id}/{password}")
     public SchedulerResponseDto putSchedule(@PathVariable Long id,@PathVariable String password, @RequestBody SchedulerRequestDto schedulerRequestDto) {
-        SchedulerService schedulerService = new SchedulerService(jdbcTemplate);
         return schedulerService.updateSchedule(id, password, schedulerRequestDto);
 
     }
@@ -51,7 +47,6 @@ public class SchedulerController {
     // 선택한 일정 삭제
     @DeleteMapping("/scheduler/{id}/{password}")
     public String deleteSchedule(@PathVariable Long id, @PathVariable String password) {
-        SchedulerService schedulerService = new SchedulerService(jdbcTemplate);
         return schedulerService.deleteSchedule(id, password);
     }
 }
