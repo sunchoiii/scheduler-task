@@ -3,19 +3,17 @@ package com.sparta.schedulertask.controller;
 import com.sparta.schedulertask.dto.SchedulerRequestDto;
 import com.sparta.schedulertask.dto.SchedulerResponseDto;
 import com.sparta.schedulertask.service.SchedulerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api")
 public class SchedulerController {
 
     private final SchedulerService schedulerService;
-
-    public SchedulerController(SchedulerService schedulerService) {
-        this.schedulerService = schedulerService;
-    }
 
     // 일정 등록
     @PostMapping("/scheduler")
@@ -25,9 +23,9 @@ public class SchedulerController {
 
     // 선택한 일정 조회
     // 일정의 고유 식별자(ID)를 사용하여 선택한 일정 단건의 정보를 조회
-    @GetMapping("/scheduler/{id}")
-    public SchedulerResponseDto getSchedule(@PathVariable Long id) {
-        return schedulerService.getSchedule(id);
+    @GetMapping("/scheduler")
+    public SchedulerResponseDto getSchedule(@RequestBody SchedulerRequestDto schedulerRequestDto) {
+        return schedulerService.getSchedule(schedulerRequestDto.getId());
     }
 
     // 일정 목록 조회
@@ -36,16 +34,17 @@ public class SchedulerController {
         return schedulerService.getSchedules(updateDate, username );
     }
 
+    //리퀘스트바디 두개는 불가
     // 선택한 일정 수정
-    @PutMapping("/scheduler/{id}/{password}")
-    public SchedulerResponseDto putSchedule(@PathVariable Long id,@PathVariable String password, @RequestBody SchedulerRequestDto schedulerRequestDto) {
-        return schedulerService.updateSchedule(id, password, schedulerRequestDto);
+    @PutMapping("/scheduler")
+    public SchedulerResponseDto putSchedule(@RequestBody SchedulerRequestDto schedulerRequestDto) {
+        return schedulerService.updateSchedule(schedulerRequestDto.getId(), schedulerRequestDto.getPassword(), schedulerRequestDto);
 
     }
 
     // 선택한 일정 삭제
-    @DeleteMapping("/scheduler/{id}/{password}")
-    public String deleteSchedule(@PathVariable Long id, @PathVariable String password) {
-        return schedulerService.deleteSchedule(id, password);
+    @DeleteMapping("/scheduler")
+    public String deleteSchedule(@RequestBody SchedulerRequestDto schedulerRequestDto) {
+        return schedulerService.deleteSchedule(schedulerRequestDto.getId(), schedulerRequestDto.getPassword());
     }
 }

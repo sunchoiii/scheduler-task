@@ -1,6 +1,7 @@
 package com.sparta.schedulertask.dto;
 
 import com.sparta.schedulertask.entity.Scheduler;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class SchedulerResponseDto {
     private Long id;
     private String username;
@@ -24,11 +26,4 @@ public class SchedulerResponseDto {
         this.updateDate = scheduler.getUpdateDate();
     }
 
-    public SchedulerResponseDto(Long id, String username, String contents, LocalDateTime createDate, LocalDateTime updateDate) {
-        this.id = id;
-        this.username = username;
-        this.contents = contents;
-        this.createDate = createDate;
-        this.updateDate = updateDate;
-    }
 }
