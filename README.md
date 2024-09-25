@@ -1,5 +1,5 @@
 
-### API 명세서
+# API 명세서
 
 | 기능 | Method | URL | request |response|
 |:---:|:---:|:---:|:---|:---|
@@ -11,6 +11,6 @@
 
 <br>
 
-### ERD
+# ERD
 
 <img width="412" alt="스크린샷 2024-08-15 오후 6 59 17" src="https://github.com/user-attachments/assets/f78f2b88-74f6-446b-9198-dda7a12a5938">
